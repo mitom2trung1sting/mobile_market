@@ -154,7 +154,7 @@ const ThankYouPage = async ({ searchParams }: PageProps) => {
                 </div>
 
                 <div className="flex items-center justify-between border-t border-gray-200 pt-6 text-gray-900">
-                  <p className="text-base">Tổng tiền</p>
+                  <p className="text-base">Thành tiền</p>
                   <p className="text-base">{formatPrice(orderTotal + 1)}</p>
                 </div>
               </div>

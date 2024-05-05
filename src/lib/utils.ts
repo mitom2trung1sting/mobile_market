@@ -26,7 +26,7 @@ export function formatPrice(
 }
 
 export function constructMetadata({
-  title = "Tuấn Minh Istore - Thế giới của công nghệ di động.",
+  title = "Tuấn Minh iStore - Thế giới của công nghệ di động.",
   description = "Tuấn Minh iStore là nơi bạn có thể tìm thấy những chiếc điện thoại thông minh mới nhất từ các thương hiệu hàng đầu trên thế giới.",
   image = "/thumbnail.png",
   icons = "/favicon.ico",
@@ -58,7 +58,9 @@ export function constructMetadata({
       creator: "@joshtriedcoding",
     },
     icons,
-    metadataBase: new URL("https://digitalhippo.up.railway.app"),
+    metadataBase: new URL(
+      "https://mobile-market-8bcgv902a-khaphamnes-projects.vercel.app"
+    ),
     ...(noIndex && {
       robots: {
         index: false,
