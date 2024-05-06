@@ -39,7 +39,7 @@ export const ReceiptEmail = ({
   return (
     <Html>
       <Head />
-      <Preview>Biên lai từ Tuấn Minh iStore</Preview>
+      <Preview>Hóa đơn từ Tuấn Minh iStore</Preview>
 
       <Body style={main}>
         <Container style={container}>
@@ -54,7 +54,7 @@ export const ReceiptEmail = ({
             </Column>
 
             <Column align="right" style={tableCell}>
-              <Text style={heading}>Biên lai</Text>
+              <Text style={heading}>Hóa đơn</Text>
             </Column>
           </Section>
           <Section style={informationTable}>
@@ -121,7 +121,7 @@ export const ReceiptEmail = ({
                     href={`${process.env.NEXT_PUBLIC_SERVER_URL}/thank-you?orderId=${orderId}`}
                     style={productLink}
                   >
-                    Download Asset
+                    Tải về hóa đơn sản phẩm.
                   </Link>
                 </Column>
 
@@ -166,7 +166,7 @@ export const ReceiptEmail = ({
             <Link href="#">Privacy Policy </Link>
           </Text>
           <Text style={footerCopyright}>
-            Copyright © 2023 DigitalHippo Inc. <br />{" "}
+            Copyright © 2023 Tuấn Minh iStoreInc. <br />{" "}
             <Link href="#">All rights reserved</Link>
           </Text>
         </Container>

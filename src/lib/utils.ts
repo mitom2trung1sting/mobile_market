@@ -55,12 +55,10 @@ export function constructMetadata({
       title,
       description,
       images: [image],
-      creator: "@joshtriedcoding",
+      creator: "@khaphamne",
     },
     icons,
-    metadataBase: new URL(
-      "https://mobile-market-8bcgv902a-khaphamnes-projects.vercel.app"
-    ),
+    metadataBase: new URL("https://tuan-minh-istore.onrender.com"),
     ...(noIndex && {
       robots: {
         index: false,

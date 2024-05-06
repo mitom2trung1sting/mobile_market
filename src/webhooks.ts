@@ -83,9 +83,10 @@ export const stripeWebhookHandler = async (
     // send receipt
     try {
       const data = await resend.emails.send({
-        from: "Tuán Minh Istore <thosankieuhanh123@gmail.com>",
+        from: "Tuấn Minh iStore <onboarding@resend.dev>",
         to: [user.email],
-        subject: "Thanks for your order! This is your receipt.",
+        subject:
+          "Cảm ơn đã mua hàng tại Tuấn Minh iStore! 🎉. Dưới đây là hóa đơn của bạn.",
         html: ReceiptEmailHtml({
           date: new Date(),
           email: user.email,

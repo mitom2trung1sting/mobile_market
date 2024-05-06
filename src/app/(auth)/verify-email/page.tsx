@@ -32,8 +32,8 @@ const VerifyEmailPage = ({ searchParams }: PageProps) => {
 
             {toEmail ? (
               <p className="text-muted-foreground text-center">
-                Chúng tôi đã gửi một liên kết để xác minh tài khoản tới{" "}
-                <span className="font-semibold">{toEmail}</span>.
+                Chúng tôi đã gửi một liên kết để xác minh tài khoản tới email{" "}
+                <span className="font-semibold">{toEmail + "@gmail.com"}</span>.
               </p>
             ) : (
               <p className="text-muted-foreground text-center">

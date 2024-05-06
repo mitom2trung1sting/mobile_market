@@ -1,9 +1,8 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import MaxWidthWrapper from "./MaxWidthWrapper";
 import { Icons } from "./Icons";
-import Link from "next/link";
+import MaxWidthWrapper from "./MaxWidthWrapper";
 
 const Footer = () => {
   const pathname = usePathname();
@@ -31,7 +30,7 @@ const Footer = () => {
                   />
                 </div>
 
-                <div className="text-center relative mx-auto max-w-sm">
+                {/* <div className="text-center relative mx-auto max-w-sm">
                   <h3 className="font-semibold text-gray-900">
                     Become a seller
                   </h3>
@@ -45,7 +44,7 @@ const Footer = () => {
                       Get started &rarr;
                     </Link>
                   </p>
-                </div>
+                </div> */}
               </div>
             </div>
           )}

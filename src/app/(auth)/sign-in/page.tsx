@@ -53,7 +53,7 @@ const Page = () => {
       }
 
       // if (isSeller) {
-      //   router.push("/sell");
+      //   router.push("/admin");
       //   return;
       // }
 

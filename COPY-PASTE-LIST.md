@@ -1,4 +1,4 @@
-# DigitalHippo - A Modern Fullstack E-Commerce Marketplace for Digital Products
+# Tuấn Minh -iStore-
 
 Built with the Next.js 14 App Router, tRPC, TypeScript, Payload & Tailwind
 
@@ -208,7 +208,7 @@ await payload.update({
 // send receipt
 try {
     const data = await resend.emails.send({
-    from: 'DigitalHippo <hello@joshtriedcoding.com>',
+    from: 'Tuấn Minh iStore<hello@joshtriedcoding.com>',
     to: [user.email],
     subject: 'Thanks for your order! This is your receipt.',
     html: ReceiptEmailHtml({
@@ -231,7 +231,7 @@ return res.status(200).send()
 ```
 <Html>
     <Head />
-    <Preview>Your DigitalHippo Receipt</Preview>
+    <Preview>Your Tuấn Minh iStoreReceipt</Preview>
 
     <Body style={main}>
     <Container style={container}>
@@ -350,7 +350,7 @@ return res.status(200).send()
         <Link href='#'>Privacy Policy </Link>
         </Text>
         <Text style={footerCopyright}>
-        Copyright © 2023 DigitalHippo Inc. <br />{' '}
+        Copyright © 2023 Tuấn Minh iStoreInc. <br />{' '}
         <Link href='#'>All rights reserved</Link>
         </Text>
     </Container>
@@ -555,7 +555,7 @@ const footerCopyright = {
     <Text style={paragraph}>
         Best,
         <br />
-        The DigitalHippo team
+        The Tuấn Minh iStoreteam
     </Text>
     <Hr style={hr} />
     <Text style={footer}>
@@ -617,8 +617,8 @@ const footer = {
 ### Customizing our metadata
 ```
 export function constructMetadata({
-  title = 'DigitalHippo - the marketplace for digital assets',
-  description = 'DigitalHippo is an open-source marketplace for high-quality digital goods.',
+  title = 'Tuấn Minh iStore- the marketplace for digital assets',
+  description = 'Tuấn Minh iStoreis an open-source marketplace for high-quality digital goods.',
   image = '/thumbnail.png',
   icons = '/favicon.ico',
   noIndex = false,

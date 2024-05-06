@@ -28,25 +28,22 @@ export const EmailTemplate = ({
   return (
     <Html>
       <Head />
-      <Preview>
-        Tuấn Minh iStore là nơi bạn có thể tìm thấy những chiếc điện thoại thông
-        minh mới nhất từ các thương hiệu hàng đầu trên thế giới.
-      </Preview>
+      <Preview>Xác minh tài khoản tại Tuấn Minh iStore.</Preview>
       <Body style={main}>
         <Container style={container}>
           <Img
             src={`${process.env.NEXT_PUBLIC_SERVER_URL}/hippo-newsletter-sign-up.png`}
             width="150"
             height="150"
-            alt="DigitalHippo"
+            alt="Logo"
             style={logo}
           />
           <Text style={paragraph}>Xin chào!!</Text>
           <Text style={paragraph}>
-            Tuấn Minh iStore là nơi bạn có thể tìm thấy những chiếc điện thoại
-            thông minh mới nhất từ các thương hiệu hàng đầu trên thế giới. Sử
-            dụng nút bên dưới để tới {actionLabel}.
+            Đây là email xác minh tài khoản từ Tuấn Minh iStore, nhấp vào nút
+            bên dưới để xác minh tài khoản của bạn.
           </Text>
+          <Text>{actionLabel}</Text>
           <Section style={btnContainer}>
             <Button style={button} href={href}>
               {buttonText}

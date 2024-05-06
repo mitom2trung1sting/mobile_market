@@ -6,9 +6,13 @@ const nextConfig = {
         protocol: "http",
         hostname: "localhost",
       },
+      // {
+      //   protocol: "https",
+      //   hostname: "mobile-market-8bcgv902a-khaphamnes-projects.vercel.app/",
+      // },
       {
         protocol: "https",
-        hostname: "mobile-market-8bcgv902a-khaphamnes-projects.vercel.app/",
+        hostname: "tuan-minh-istore.onrender.com",
       },
     ],
   },
