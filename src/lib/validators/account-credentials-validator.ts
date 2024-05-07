@@ -5,6 +5,7 @@ export const AuthCredentialsValidator = z.object({
   password: z.string().min(8, {
     message: "Độ dài mật khẩu ít nhất 8 ký tự.",
   }),
+  repeatPassword: z.string().nonempty("Không được bỏ trống trường này"),
 });
 
 export type TAuthCredentialsValidator = z.infer<

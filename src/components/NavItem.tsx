@@ -39,10 +39,10 @@ const NavItem = ({
   };
 
   return (
-    <div className="flex">
+    <div className="flex ">
       <div className="relative flex items-center">
         <Button
-          className="gap-1.5"
+          className="gap-1.5 text-orange-900"
           onClick={handleOpen}
           variant={isOpen ? "secondary" : "ghost"}
         >
@@ -65,25 +65,20 @@ const NavItem = ({
             }
           )}
         >
-          <div
-            className="absolute inset-0 top-1/2 bg-white shadow"
-            aria-hidden="true"
-          />
-
-          <div className="relative bg-white">
+          <div className="relative bg-orange-800 rounded-md w-2/3 left-1/2 right-1/2 -translate-x-1/2 max-h-[500px] overflow-auto">
             <div className="mx-auto max-w-7xl px-8">
               <div className="grid grid-cols-4 gap-x-8">
-                <div className="col-span-4 col-start-1 grid grid-cols-3 gap-x-8 p-6 max-h-[500px] overflow-auto">
+                <div className="col-span-4 col-start-1 grid grid-cols-3 gap-x-10 gap-y-10 p-5 pt-10 pb-10">
                   {category.featured.map((item, index) => (
                     <div
                       onClick={() => close}
                       key={item.name + index}
-                      className="group relative text-base sm:text-sm mb-10"
+                      className="group relative text-base sm:text-sm"
                     >
                       <Link
                         id={"nav-item-" + index}
                         href={item.href}
-                        className=" block font-medium text-gray-900"
+                        className=" block font-medium text-white"
                       >
                         <div
                           className="relative aspect-video overflow-hidden rounded-lg bg-gray-100"

@@ -1,3 +1,4 @@
+import ButtonScrollDown from "@/components/ButtonScrollDown";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import ProductReel from "@/components/ProductReel";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -50,7 +51,7 @@ export default function Home() {
             <Link href="/products" className={buttonVariants()}>
               Sản phẩm nổi bật
             </Link>
-            <Button variant="ghost">Our quality promise &rarr;</Button>
+            <ButtonScrollDown title=" Lời hứa về chất lượng &rarr;" />
           </div>
         </div>
 

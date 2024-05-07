@@ -32,8 +32,8 @@ const Page = async ({ params }: PageProps) => {
       id: {
         equals: productId,
       },
-      approvedForSale: {
-        equals: "approved",
+      productStatus: {
+        equals: "selling",
       },
     },
   });

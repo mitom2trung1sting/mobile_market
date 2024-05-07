@@ -5,42 +5,42 @@ export const PRODUCT_CATEGORIES = [
     featured: [
       {
         name: "Iphone",
-        href: `/products?category=phone`,
+        href: `/products?category=phone&sort=desc&type=Iphone`,
         imageSrc: "/nav/phone/iphone.jpg",
       },
       {
         name: "Samsung",
-        href: "/products?category=phone&sort=desc",
+        href: "/products?category=phone&sort=desc&type=Samsung",
         imageSrc: "/nav/phone/samsung.jpg",
       },
       {
         name: "Xiaomi",
-        href: "/products?category=phone",
+        href: "/products?category=phone&sort=desc&type=Xiaomi",
         imageSrc: "/nav/phone/xiaomi.jpg",
       },
       {
         name: "Oppo",
-        href: "/products?category=phone",
+        href: "/products?category=phone&sort=desc&type=Oppo",
         imageSrc: "/nav/phone/oppo.jpg",
       },
       {
         name: "Vivo",
-        href: "/products?category=phone",
+        href: "/products?category=phone&sort=desc&type=Vivo",
         imageSrc: "/nav/phone/vivo.jpg",
       },
       {
         name: "Realme",
-        href: "/products?category=phone",
+        href: "/products?category=phone&sort=desc&type=Realme",
         imageSrc: "/nav/phone/realme.jpg",
       },
       {
         name: "Asus",
-        href: "/products?category=phone",
+        href: "/products?category=phone&sort=desc&type=Asus",
         imageSrc: "/nav/phone/asus.jpg",
       },
       {
         name: "Nokia",
-        href: "/products?category=phone",
+        href: "/products?category=phone&sort=desc&type=Nokia",
         imageSrc: "/nav/phone/nokia.jpg",
       },
     ],
@@ -51,7 +51,7 @@ export const PRODUCT_CATEGORIES = [
     featured: [
       {
         name: "Ipad",
-        href: `/products?category=tablet`,
+        href: `/products?category=tablet&sort=desc`,
         imageSrc: "/nav/tablet/ipad.jpg",
       },
       {
@@ -61,17 +61,17 @@ export const PRODUCT_CATEGORIES = [
       },
       {
         name: "Galaxy Tablet",
-        href: "/products?category=tablet",
+        href: "/products?category=tablet&sort=desc",
         imageSrc: "/nav/tablet/galaxypad.jpg",
       },
       {
         name: "Lenovo Tablet",
-        href: "/products?category=tablet",
+        href: "/products?category=tablet&sort=desc",
         imageSrc: "/nav/tablet/lenovopad.jpg",
       },
       {
         name: "Nokia Tablet",
-        href: "/products?category=tablet",
+        href: "/products?category=tablet&sort=desc",
         imageSrc: "/nav/tablet/nokiapad.jpg",
       },
     ],

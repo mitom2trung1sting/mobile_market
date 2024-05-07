@@ -72,26 +72,9 @@ const Page = () => {
 
   return (
     <>
-      <div className="container relative flex pt-20 flex-col items-center justify-center lg:px-0">
-        <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
-          <div className="flex flex-col items-center space-y-2 text-center">
-            <Icons.logo className="h-20 w-20" />
-            <div className="text-2xl font-semibold tracking-tight">
-              Đăng nhập
-            </div>
-
-            <Link
-              className={buttonVariants({
-                variant: "link",
-                className: "gap-1.5",
-              })}
-              href="/sign-up"
-            >
-              Bạn chưa có tài khoản? Đăng ký ngay
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-
+      <Icons className="z-0 w-2/3 absolute top-1/2 left-1/2 right-1/2 -translate-x-1/2 -translate-y-[450px]" />
+      <div className="mt-48 rounded-sm w-[400px] h-[300px]  container relative flex flex-col items-center justify-center lg:px-0 bg-cyan-100 z-10">
+        <div className="mx-auto flex w-full flex-col justify-center space-y-4 sm:w-[350px]">
           <div className="grid gap-6">
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="grid gap-2">
@@ -134,6 +117,18 @@ const Page = () => {
                   )}
                   Đăng nhập
                 </Button>
+                <div className="flex flex-col items-center space-y-2 text-center">
+                  <Link
+                    className={buttonVariants({
+                      variant: "link",
+                      className: "gap-1.5 text-purple-950",
+                    })}
+                    href="/sign-up"
+                  >
+                    Bạn chưa có tài khoản? Đăng ký ngay
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </div>
               </div>
             </form>
 

@@ -15,15 +15,15 @@ const Navbar = async () => {
 
   return (
     <div className="bg-white sticky z-50 top-0 inset-x-0 h-16">
-      <header className="relative bg-white">
+      <header className="relative bg-orange-200 rounded-md">
         <MaxWidthWrapper>
-          <div className="border-b border-gray-200">
+          <div className="">
             <div className="flex h-16 items-center">
               <MobileNav />
 
               <div className="ml-4 flex lg:ml-0">
                 <Link href="/">
-                  <Icons.logo className="h-10 w-10" />
+                  <Icons className="w-[64px] h-[64px] mt-4" />
                 </Link>
               </div>
 
@@ -33,25 +33,17 @@ const Navbar = async () => {
 
               <div className="ml-auto flex items-center">
                 <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                  {/* {user ? null : (
-                    <Link
-                      href="/sign-in"
-                      className={buttonVariants({
-                        variant: "ghost",
-                      })}
-                    >
-                      Đăng nhập
-                    </Link>
-                  )} */}
-
                   {user ? (
                     <UserAccountNav user={user} />
                   ) : (
                     <Link
                       href="/sign-in"
-                      className={buttonVariants({
-                        variant: "ghost",
-                      })}
+                      className={[
+                        buttonVariants({
+                          variant: "ghost",
+                        }),
+                        "text-orange-900 group-hover:text-red-600",
+                      ].join(" ")}
                     >
                       Đăng nhập
                     </Link>
