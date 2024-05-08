@@ -66,8 +66,12 @@ const Page = () => {
     },
   });
 
-  const onSubmit = ({ email, password }: TAuthCredentialsValidator) => {
-    signIn({ email, password });
+  const onSubmit = ({
+    email,
+    password,
+    repeatPassword,
+  }: TAuthCredentialsValidator) => {
+    signIn({ email, password, repeatPassword });
   };
 
   return (
