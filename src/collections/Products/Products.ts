@@ -49,8 +49,10 @@ const isAdminOrHasAccess =
   ({ req: { user: _user } }) => {
     const user = _user as User | undefined;
 
-    if (!user) return false;
-    if (user.role === "admin") return true;
+    const hidden = user?.role === "admin";
+
+    if (hidden) return true;
+    if (!hidden) return false;
 
     const userProductIDs = (user.products || []).reduce<Array<string>>(
       (acc, product) => {
@@ -149,9 +151,9 @@ export const Products: CollectionConfig = {
     },
     {
       name: "price",
-      label: "Giá sản phẩm (USD)",
+      label: "Giá sản phẩm (VND)",
       min: 0,
-      max: 1000,
+      max: 999999999999999,
       type: "number",
       required: true,
     },

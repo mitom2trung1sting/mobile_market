@@ -4,7 +4,6 @@ import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import ProductReel from "@/components/ProductReel";
 import { PRODUCT_CATEGORIES } from "@/config";
 import { getPayloadClient } from "@/get-payload";
-import { formatPrice } from "@/lib/utils";
 import { Check, Shield } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -16,8 +15,8 @@ interface PageProps {
 }
 
 const BREADCRUMBS = [
-  { id: 1, name: "Home", href: "/" },
-  { id: 2, name: "Products", href: "/products" },
+  { id: 1, name: "Trang chủ", href: "/" },
+  { id: 2, name: "Sản phẩm", href: "/products" },
 ];
 
 const Page = async ({ params }: PageProps) => {
@@ -90,7 +89,7 @@ const Page = async ({ params }: PageProps) => {
             <section className="mt-4">
               <div className="flex items-center">
                 <p className="font-medium text-gray-900">
-                  {formatPrice(product.price)}
+                  {product.price.toLocaleString("en")}đ
                 </p>
 
                 <div className="ml-4 border-l text-muted-foreground border-gray-300 pl-4">
@@ -147,9 +146,9 @@ const Page = async ({ params }: PageProps) => {
 
       <ProductReel
         href="/products"
-        query={{ category: product.category, limit: 4 }}
-        title={`Similar ${label}`}
-        subtitle={`Browse similar high-quality ${label} just like '${product.name}'`}
+        query={{ category: product.category, limit: 4, type: product.type }}
+        title={`Tương tự ${label}`}
+        subtitle={`Một số sản phẩm khác tương tự ${label} '${product.name}'`}
       />
     </MaxWidthWrapper>
   );

@@ -1,13 +1,12 @@
-import { getServerSideUser } from "@/lib/payload-utils";
-import Image from "next/image";
-import { cookies } from "next/headers";
-import { getPayloadClient } from "@/get-payload";
-import { notFound, redirect } from "next/navigation";
-import { Product, ProductFile, User } from "@/payload-types";
-import { PRODUCT_CATEGORIES } from "@/config";
-import { formatPrice } from "@/lib/utils";
-import Link from "next/link";
 import PaymentStatus from "@/components/PaymentStatus";
+import { PRODUCT_CATEGORIES } from "@/config";
+import { getPayloadClient } from "@/get-payload";
+import { getServerSideUser } from "@/lib/payload-utils";
+import { Product, ProductFile, User } from "@/payload-types";
+import { cookies } from "next/headers";
+import Image from "next/image";
+import Link from "next/link";
+import { notFound, redirect } from "next/navigation";
 
 interface PageProps {
   searchParams: {
@@ -135,7 +134,7 @@ const ThankYouPage = async ({ searchParams }: PageProps) => {
                       </div>
 
                       <p className="flex-none font-medium text-gray-900">
-                        {formatPrice(product.price)}
+                        {product.price.toLocaleString("en")}đ
                       </p>
                     </li>
                   );
@@ -145,17 +144,21 @@ const ThankYouPage = async ({ searchParams }: PageProps) => {
               <div className="space-y-6 border-t border-gray-200 pt-6 text-sm font-medium text-muted-foreground">
                 <div className="flex justify-between">
                   <p>Tổng cộng</p>
-                  <p className="text-gray-900">{formatPrice(orderTotal)}</p>
+                  <p className="text-gray-900">
+                    {orderTotal.toLocaleString("en")}
+                  </p>
                 </div>
 
                 <div className="flex justify-between">
                   <p>Phí giao dịch</p>
-                  <p className="text-gray-900">{formatPrice(1)}</p>
+                  <p className="text-gray-900">Free</p>
                 </div>
 
                 <div className="flex items-center justify-between border-t border-gray-200 pt-6 text-gray-900">
                   <p className="text-base">Thành tiền</p>
-                  <p className="text-base">{formatPrice(orderTotal + 1)}</p>
+                  <p className="text-base">
+                    {orderTotal.toLocaleString("en") + "đ"}
+                  </p>
                 </div>
               </div>
 

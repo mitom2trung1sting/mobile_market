@@ -1,8 +1,8 @@
 import ButtonScrollDown from "@/components/ButtonScrollDown";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import ProductReel from "@/components/ProductReel";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { PackageOpen, CheckCircle, Truck, PhoneCall } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
+import { CheckCircle, PackageOpen, PhoneCall, Truck } from "lucide-react";
 import Link from "next/link";
 
 const perks = [

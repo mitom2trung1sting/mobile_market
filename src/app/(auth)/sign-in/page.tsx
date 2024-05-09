@@ -11,8 +11,8 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 
 import {
-  AuthCredentialsValidator,
-  TAuthCredentialsValidator,
+  AuthCredentialsValidatorLogin,
+  TAuthCredentialsValidatorLogin,
 } from "@/lib/validators/account-credentials-validator";
 import { trpc } from "@/trpc/client";
 import { toast } from "sonner";
@@ -22,28 +22,20 @@ import { useRouter, useSearchParams } from "next/navigation";
 const Page = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const isSeller = searchParams.get("as") === "seller";
   const origin = searchParams.get("origin");
-
-  const continueAsSeller = () => {
-    router.push("?as=seller");
-  };
-
-  const continueAsBuyer = () => {
-    router.replace("/sign-in", undefined);
-  };
 
   const {
     register,
+    getValues,
     handleSubmit,
     formState: { errors },
-  } = useForm<TAuthCredentialsValidator>({
-    resolver: zodResolver(AuthCredentialsValidator),
+  } = useForm<TAuthCredentialsValidatorLogin>({
+    resolver: zodResolver(AuthCredentialsValidatorLogin),
   });
 
   const { mutate: signIn, isLoading } = trpc.auth.signIn.useMutation({
     onSuccess: async () => {
-      toast.success("Signed in successfully");
+      toast.success("Đăng nhập thành công!!");
 
       router.refresh();
 
@@ -52,26 +44,21 @@ const Page = () => {
         return;
       }
 
-      // if (isSeller) {
-      //   router.push("/admin");
-      //   return;
-      // }
-
       router.push("/");
     },
     onError: (err) => {
       if (err.data?.code === "UNAUTHORIZED") {
         toast.error("Invalid email or password.");
       }
+      if (err instanceof ZodError) {
+        toast.error(err.issues[0].message);
+        return;
+      }
     },
   });
 
-  const onSubmit = ({
-    email,
-    password,
-    repeatPassword,
-  }: TAuthCredentialsValidator) => {
-    signIn({ email, password, repeatPassword });
+  const onSubmit = ({ email, password }: TAuthCredentialsValidatorLogin) => {
+    signIn({ email, password });
   };
 
   return (
@@ -135,35 +122,6 @@ const Page = () => {
                 </div>
               </div>
             </form>
-
-            {/* <div className='relative'>
-              <div
-                aria-hidden='true'
-                className='absolute inset-0 flex items-center'>
-                <span className='w-full border-t' />
-              </div>
-              <div className='relative flex justify-center text-xs uppercase'>
-                <span className='bg-background px-2 text-muted-foreground'>
-                  or
-                </span>
-              </div>
-            </div>
-
-            {isSeller ? (
-              <Button
-                onClick={continueAsBuyer}
-                variant='secondary'
-                disabled={isLoading}>
-                Continue as customer
-              </Button>
-            ) : (
-              <Button
-                onClick={continueAsSeller}
-                variant='secondary'
-                disabled={isLoading}>
-                Continue as seller
-              </Button>
-            )} */}
           </div>
         </div>
       </div>

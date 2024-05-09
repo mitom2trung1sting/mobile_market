@@ -1,10 +1,9 @@
-import { formatPrice } from "../../lib/utils";
 import { Product } from "../../payload-types";
 
 import {
   Body,
-  Container,
   Column,
+  Container,
   Head,
   Hr,
   Html,
@@ -16,8 +15,6 @@ import {
   Text,
   render,
 } from "@react-email/components";
-
-import * as React from "react";
 
 import { format } from "date-fns";
 
@@ -126,7 +123,9 @@ export const ReceiptEmail = ({
                 </Column>
 
                 <Column style={productPriceWrapper} align="right">
-                  <Text style={productPrice}>{formatPrice(product.price)}</Text>
+                  <Text style={productPrice}>
+                    {product.price.toLocaleString("en")}
+                  </Text>
                 </Column>
               </Section>
             );
@@ -144,7 +143,7 @@ export const ReceiptEmail = ({
             </Column>
 
             <Column style={productPriceWrapper} align="right">
-              <Text style={productPrice}>{formatPrice(1)}</Text>
+              <Text style={productPrice}>Free</Text>
             </Column>
           </Section>
 
@@ -155,7 +154,9 @@ export const ReceiptEmail = ({
             </Column>
             <Column style={productPriceVerticalLine}></Column>
             <Column style={productPriceLargeWrapper}>
-              <Text style={productPriceLarge}>{formatPrice(total)}</Text>
+              <Text style={productPriceLarge}>
+                {total.toLocaleString("en")}
+              </Text>
             </Column>
           </Section>
           <Hr style={productPriceLineBottom} />

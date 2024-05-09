@@ -1,7 +1,10 @@
 import { Access, CollectionConfig } from "payload/types";
 
 const yourOwn: Access = ({ req: { user } }) => {
-  if (user.role === "admin") return true;
+  const hidden = user?.role === "admin";
+
+  if (hidden) return true;
+  if (!hidden) return false;
 
   return {
     user: {

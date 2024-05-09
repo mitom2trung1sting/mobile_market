@@ -1,6 +1,14 @@
 "use client";
 
+import { useCart } from "@/hooks/use-cart";
 import { ShoppingCart } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import CartItem from "./CartItem";
+import { buttonVariants } from "./ui/button";
+import { ScrollArea } from "./ui/scroll-area";
+import { Separator } from "./ui/separator";
 import {
   Sheet,
   SheetContent,
@@ -9,15 +17,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "./ui/sheet";
-import { Separator } from "./ui/separator";
-import { formatPrice } from "@/lib/utils";
-import Link from "next/link";
-import { buttonVariants } from "./ui/button";
-import Image from "next/image";
-import { useCart } from "@/hooks/use-cart";
-import { ScrollArea } from "./ui/scroll-area";
-import CartItem from "./CartItem";
-import { useEffect, useState } from "react";
 
 const Cart = () => {
   const { items } = useCart();
@@ -34,7 +33,7 @@ const Cart = () => {
     0
   );
 
-  const fee = 1;
+  const fee = 0;
 
   return (
     <Sheet>
@@ -55,8 +54,8 @@ const Cart = () => {
           <>
             <div className="flex w-full flex-col pr-6">
               <ScrollArea>
-                {items.map(({ product }) => (
-                  <CartItem product={product} key={product.id} />
+                {items.map(({ product }, index) => (
+                  <CartItem product={product} key={product.id} index={index} />
                 ))}
               </ScrollArea>
             </div>
@@ -69,11 +68,11 @@ const Cart = () => {
                 </div>
                 <div className="flex">
                   <span className="flex-1">Phí giao dịch</span>
-                  <span>{formatPrice(fee)}</span>
+                  <span>Free</span>
                 </div>
                 <div className="flex">
                   <span className="flex-1">Tổng</span>
-                  <span>{formatPrice(cartTotal + fee)}</span>
+                  <span>{(cartTotal + fee).toLocaleString("en") + "đ"}</span>
                 </div>
               </div>
 

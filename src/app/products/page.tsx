@@ -15,6 +15,7 @@ const parse = (param: Param) => {
 const ProductsPage = ({ searchParams }: ProductsPageProps) => {
   const sort = parse(searchParams.sort);
   const category = parse(searchParams.category);
+  const type = parse(searchParams.type);
 
   const label = PRODUCT_CATEGORIES.find(
     ({ value }) => value === category
@@ -26,6 +27,7 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
         title={label ?? "Sản phẩm vừa mới ra mắt"}
         query={{
           category,
+          type,
           limit: 40,
           sort: sort === "desc" || sort === "asc" ? sort : undefined,
         }}
