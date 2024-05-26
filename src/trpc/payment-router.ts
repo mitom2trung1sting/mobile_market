@@ -1,9 +1,8 @@
-import { z } from "zod";
-import { privateProcedure, publicProcedure, router } from "./trpc";
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 import { getPayloadClient } from "../get-payload";
-import { stripe } from "../lib/stripe";
-import type Stripe from "stripe";
+import { privateProcedure, router } from "./trpc";
+import { CreatePaymentUrl, ResendEmailWebHook } from "./webhooks";
 
 export const paymentRouter = router({
   createSession: privateProcedure
@@ -38,39 +37,25 @@ export const paymentRouter = router({
         },
       });
 
-      const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
-
-      filteredProducts.forEach((product) => {
-        line_items.push({
-          price: product.priceId!,
-          quantity: 1,
-        });
-      });
-
-      line_items.push({
-        price: "price_1PCxBzRwTgukv9Wl9SUFDqKU",
-        quantity: 1,
-        adjustable_quantity: {
-          enabled: false,
+      const session = {
+        success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/thank-you?orderId=${order.id}`,
+        cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/cart`,
+        metadata: {
+          userId: user.id,
+          orderId: order.id,
         },
-      });
+      };
+
+      ctx.req.cookies = {
+        session,
+      };
 
       try {
-        const stripeSession = await stripe.checkout.sessions.create({
-          success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/thank-you?orderId=${order.id}`,
-          cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/cart`,
-          payment_method_types: ["card", "paypal"],
-          mode: "payment",
-          metadata: {
-            userId: user.id,
-            orderId: order.id,
-          },
-          line_items,
-        });
-
-        return { url: stripeSession.url };
+        const url = await CreatePaymentUrl(ctx.req, ctx.res, session);
+        ResendEmailWebHook(ctx.req, ctx.res, session);
+        return { url };
       } catch (err) {
-        return { url: null };
+        return { url: session.cancel_url };
       }
     }),
   pollOrderStatus: privateProcedure

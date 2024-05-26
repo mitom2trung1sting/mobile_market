@@ -1,21 +1,14 @@
 import { User } from "../payload-types";
 import { Access, CollectionConfig } from "payload/types";
 
-const isAdminOrHasAccessToImages =
+const isAdmin =
   (): Access =>
-  async ({ req }) => {
-    const user = req.user as User | undefined;
-
-    const hidden = user?.role === "admin";
-
-    if (hidden) return true;
-    if (!hidden) return false;
-
-    return {
-      user: {
-        equals: req.user.id,
-      },
-    };
+  ({ req: { user: _user } }) => {
+    const user = _user as User | undefined;
+    if (user) {
+      return Boolean(user?.role === "admin");
+    }
+    return false;
   };
 
 export const Media: CollectionConfig = {
@@ -28,17 +21,9 @@ export const Media: CollectionConfig = {
     ],
   },
   access: {
-    read: async ({ req }) => {
-      const referer = req.headers.referer;
-
-      if (!req.user || !referer?.includes("sell")) {
-        return true;
-      }
-
-      return await isAdminOrHasAccessToImages()({ req });
-    },
-    delete: isAdminOrHasAccessToImages(),
-    update: isAdminOrHasAccessToImages(),
+    read: () => true,
+    delete: isAdmin(),
+    update: isAdmin(),
   },
   admin: {
     hidden: ({ user }) => user.role !== "admin",

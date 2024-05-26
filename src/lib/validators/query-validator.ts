@@ -7,4 +7,9 @@ export const QueryValidator = z.object({
   limit: z.number().optional(),
 });
 
+export const DebounceSearchValidator = z.object({
+  category: z.string().optional(),
+  type: z.string().optional(),
+});
+
 export type TQueryValidator = z.infer<typeof QueryValidator>;

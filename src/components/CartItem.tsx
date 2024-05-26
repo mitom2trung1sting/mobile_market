@@ -58,7 +58,11 @@ const CartItem = ({ product, index }: { product: Product; index: number }) => {
 
         <div className="flex flex-col space-y-1 font-medium">
           <span className="ml-auto line-clamp-1 text-sm">
-            {product.price.toLocaleString("en")}
+            {(
+              product.price -
+              product.price * (product.discount / 100)
+            ).toLocaleString("vn")}
+            đ
           </span>
         </div>
       </div>

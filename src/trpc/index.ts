@@ -1,14 +1,55 @@
 import { z } from "zod";
-import { authRouter } from "./auth-router";
-import { publicProcedure, router } from "./trpc";
-import { QueryValidator } from "../lib/validators/query-validator";
 import { getPayloadClient } from "../get-payload";
+import {
+  DebounceSearchValidator,
+  QueryValidator,
+} from "../lib/validators/query-validator";
+import { authRouter } from "./auth-router";
 import { paymentRouter } from "./payment-router";
+import { publicProcedure, router } from "./trpc";
 
 export const appRouter = router({
   auth: authRouter,
   payment: paymentRouter,
+  getDebounceProducts: publicProcedure
+    .input(
+      z.object({
+        limit: z.number().min(1).max(100),
+        query: DebounceSearchValidator,
+      })
+    )
+    .query(async ({ input }) => {
+      const { query, limit } = input;
+      const { category, type } = query;
 
+      const payload = await getPayloadClient();
+
+      const { docs: items } = await payload.find({
+        collection: "products",
+        where: {
+          productStatus: {
+            equals: "selling",
+          },
+          or: [
+            {
+              category: {
+                like: category,
+              },
+            },
+            {
+              type: {
+                like: type,
+              },
+            },
+          ],
+        },
+        limit,
+      });
+
+      return {
+        items,
+      };
+    }),
   getInfiniteProducts: publicProcedure
     .input(
       z.object({

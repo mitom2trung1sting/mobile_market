@@ -134,7 +134,11 @@ const ThankYouPage = async ({ searchParams }: PageProps) => {
                       </div>
 
                       <p className="flex-none font-medium text-gray-900">
-                        {product.price.toLocaleString("en")}đ
+                        {(
+                          product.price -
+                          product.price * (product.discount / 100)
+                        ).toLocaleString("vn")}
+                        đ
                       </p>
                     </li>
                   );

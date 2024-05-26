@@ -19,7 +19,7 @@ const Page = () => {
   const { mutate: createCheckoutSession, isLoading } =
     trpc.payment.createSession.useMutation({
       onSuccess: ({ url }) => {
-        if (url) router.push(url);
+        if (url) router.replace(url);
       },
     });
 
@@ -31,7 +31,8 @@ const Page = () => {
   }, []);
 
   const cartTotal = items.reduce(
-    (total, { product }) => total + product.price,
+    (total, { product }) =>
+      total + (product.price - product.price * (product.discount / 100)),
     0
   );
 
@@ -122,7 +123,11 @@ const Page = () => {
                             </div>
 
                             <p className="mt-1 text-sm font-medium text-gray-900">
-                              {product.price}đ
+                              {(
+                                product.price -
+                                product.price * (product.discount / 100)
+                              ).toLocaleString("vn")}
+                              đ
                             </p>
                           </div>
 
@@ -161,7 +166,7 @@ const Page = () => {
                 <p className="text-sm text-gray-600">Giá</p>
                 <p className="text-sm font-medium text-gray-900">
                   {isMounted ? (
-                    cartTotal.toLocaleString("en") + "đ"
+                    cartTotal.toLocaleString("vn") + "đ"
                   ) : (
                     <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
                   )}
@@ -187,7 +192,7 @@ const Page = () => {
                 </div>
                 <div className="text-base font-medium text-gray-900">
                   {isMounted ? (
-                    (cartTotal + fee).toLocaleString("en") + "đ"
+                    (cartTotal + fee).toLocaleString("vn") + "đ"
                   ) : (
                     <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
                   )}

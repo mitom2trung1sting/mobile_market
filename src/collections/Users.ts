@@ -1,15 +1,16 @@
+import { User } from "@/payload-types";
 import { PrimaryActionEmailHtml } from "../components/emails/PrimaryActionEmail";
 import { Access, CollectionConfig } from "payload/types";
 
-const adminsAndUser: Access = ({ req: { user } }) => {
-  if (user.role === "admin") return true;
-
-  return {
-    id: {
-      equals: user.id,
-    },
+const isAdmin =
+  (): Access =>
+  ({ req: { user: _user } }) => {
+    const user = _user as User | undefined;
+    if (user) {
+      return Boolean(user?.role === "admin");
+    }
+    return false;
   };
-};
 
 export const Users: CollectionConfig = {
   slug: "users",
@@ -25,14 +26,14 @@ export const Users: CollectionConfig = {
     },
   },
   access: {
-    read: adminsAndUser,
+    read: isAdmin(),
     create: () => true,
-    update: ({ req }) => req.user.role === "admin",
-    delete: ({ req }) => req.user.role === "admin",
+    update: isAdmin(),
+    delete: isAdmin(),
   },
   admin: {
-    hidden: ({ user }) => user.role !== "admin",
-    defaultColumns: ["id"],
+    hidden: !isAdmin(),
+    defaultColumns: ["email", "role", "created_at"],
   },
   fields: [
     {

@@ -8,6 +8,10 @@ import { useEffect, useState } from "react";
 import AddToCartButton from "./AddToCartButton";
 import ImageSlider from "./ImageSlider";
 import { Skeleton } from "./ui/skeleton";
+import { Card, IconButton } from "@mui/material";
+import { Heart, Star } from "lucide-react";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import StarIcon from "@mui/icons-material/Star";
 
 interface ProductListingProps {
   product: Product | null;
@@ -37,14 +41,17 @@ const ProductListing = ({ product, index }: ProductListingProps) => {
 
   if (isVisible && product) {
     return (
-      <div>
+      <Card
+        className="p-3 min-h-[400px] min-w-[300px] rounded-lg transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300 cursor-pointer"
+        elevation={24}
+      >
         <Link
-          className={cn("invisible h-full w-full cursor-pointer group/main", {
+          className={cn(" invisible h-full w-full cursor-pointer group/main", {
             "visible animate-in fade-in-5": isVisible,
           })}
           href={`/product/${product.id}`}
         >
-          <div className="flex flex-col w-full">
+          <div className="gap-y-6 flex flex-col w-full">
             <div className="flex">
               <p className=" text-sm text-gray-500">{label}:&nbsp;</p>
               <h3 className="font-medium text-sm text-gray-700">
@@ -52,17 +59,35 @@ const ProductListing = ({ product, index }: ProductListingProps) => {
               </h3>
             </div>
             <ImageSlider urls={validUrls} />
-            <div className="flex justify-center">
-              <div>
-                <p className="mt-1 mb-1 font-medium text-sm text-gray-900">
-                  {product.price.toLocaleString("en")}đ
-                </p>
+            <div className="flex space-x-2">
+              <p className="text-xl font-medium text-red-400">
+                {(
+                  product.price -
+                  product.price * (product.discount / 100)
+                ).toLocaleString("vn")}
+                đ
+              </p>
+              <p className="text-xl line-through text-gray-300">
+                {product.price}đ
+              </p>
+            </div>
+            <div className="flex justify-between">
+              <div className="flex">
+                {[0, 1, 2, 3, 4].map((i) => (
+                  <div key={i}>
+                    <StarIcon className="text-yellow-400 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300" />
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex space-x-2">
+                <p className="text-sm text-gray-500">Yêu thích</p>
+                <FavoriteIcon className="text-red-400 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300" />
               </div>
             </div>
           </div>
         </Link>
-        <AddToCartButton product={product} />
-      </div>
+      </Card>
     );
   }
 };

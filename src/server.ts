@@ -1,16 +1,19 @@
-import express from "express";
-import { getPayloadClient } from "./get-payload";
-import { nextApp, nextHandler } from "./next-utils";
-import * as trpcExpress from "@trpc/server/adapters/express";
-import { appRouter } from "./trpc";
 import { inferAsyncReturnType } from "@trpc/server";
+import * as trpcExpress from "@trpc/server/adapters/express";
 import bodyParser from "body-parser";
+import express from "express";
 import { IncomingMessage } from "http";
-import { stripeWebhookHandler } from "./webhooks";
 import nextBuild from "next/dist/build";
 import path from "path";
 import { PayloadRequest } from "payload/types";
 import { parse } from "url";
+import { getPayloadClient } from "./get-payload";
+import { nextApp, nextHandler } from "./next-utils";
+import { appRouter } from "./trpc";
+import fs from "fs";
+import { Payload } from "payload";
+import { Product } from "./payload-types";
+import PRODUCT_LIST from "./config/data.json";
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
@@ -29,6 +32,28 @@ export type WebhookRequest = IncomingMessage & {
   rawBody: Buffer;
 };
 
+const writeJsonFile = async (payload: Payload) => {
+  const { docs: products } = await payload.find({
+    collection: "products",
+  });
+
+  const options =
+    products.length > 0
+      ? products.map((product: Product) => {
+          return { name: product.name, value: product.id };
+        })
+      : [];
+
+  let existingData = PRODUCT_LIST;
+
+  existingData = options;
+
+  const filePath = path.join(__dirname, "config/data.json");
+
+  // Write the updated data back to the file
+  fs.writeFileSync(filePath, JSON.stringify(existingData, null, 2), "utf8");
+};
+
 const start = async () => {
   const webhookMiddleware = bodyParser.json({
     verify: (req: WebhookRequest, _, buffer) => {
@@ -36,7 +61,7 @@ const start = async () => {
     },
   });
 
-  app.post("/api/webhooks/stripe", webhookMiddleware, stripeWebhookHandler);
+  app.post("/api/webhooks/stripe", webhookMiddleware);
 
   const payload = await getPayloadClient({
     initOptions: {
@@ -46,6 +71,8 @@ const start = async () => {
       },
     },
   });
+
+  writeJsonFile(payload);
 
   if (process.env.NEXT_BUILD) {
     app.listen(PORT, async () => {

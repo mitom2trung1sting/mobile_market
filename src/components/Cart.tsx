@@ -29,7 +29,8 @@ const Cart = () => {
   }, []);
 
   const cartTotal = items.reduce(
-    (total, { product }) => total + product.price,
+    (total, { product }) =>
+      total + (product.price - product.price * (product.discount / 100)),
     0
   );
 
@@ -72,7 +73,7 @@ const Cart = () => {
                 </div>
                 <div className="flex">
                   <span className="flex-1">Tổng</span>
-                  <span>{(cartTotal + fee).toLocaleString("en") + "đ"}</span>
+                  <span>{(cartTotal + fee).toLocaleString("vn") + "đ"}</span>
                 </div>
               </div>
 

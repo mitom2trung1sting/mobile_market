@@ -13,6 +13,7 @@ export interface Config {
     media: Media;
     product_files: ProductFile;
     orders: Order;
+    config_product: ConfigProduct;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
@@ -38,20 +39,50 @@ export interface User {
 }
 export interface Product {
   id: string;
+  config_product?: (string | ConfigProduct)[] | null;
   user?: (string | null) | User;
   name: string;
   description?: string | null;
   price: number;
-  type: 'Iphone' | 'Samsung' | 'Xiaomi' | 'Oppo' | 'Vivo' | 'Realme' | 'Asus' | 'Nokia';
+  discount: number;
+  totalAvailable: number;
+  type:
+    | 'iphone'
+    | 'samsung'
+    | 'xiaomi'
+    | 'oppo'
+    | 'vivo'
+    | 'realme'
+    | 'asus'
+    | 'nokia'
+    | 'ipad'
+    | 'xiaomi_pad'
+    | 'galaxy_pad'
+    | 'lenovo_pad'
+    | 'nokia_pad'
+    | 'ears'
+    | 'cable_charger'
+    | 'battery';
   category: 'phone' | 'tablet' | 'more';
   product_files: string | ProductFile;
-  productStatus?: ('sale' | 'selling' | 'stopped') | null;
+  productStatus: 'sale' | 'selling' | 'stopped';
   priceId?: string | null;
-  stripeId?: string | null;
   images: {
     image: string | Media;
     id?: string | null;
   }[];
+  updatedAt: string;
+  createdAt: string;
+}
+export interface ConfigProduct {
+  id: string;
+  products?: (string | null) | Product;
+  productName: '665219f888abf40a605b03b1';
+  config?: string | null;
+  color?: string | null;
+  price: number;
+  discount: number;
+  product_files: string | ProductFile;
   updatedAt: string;
   createdAt: string;
 }

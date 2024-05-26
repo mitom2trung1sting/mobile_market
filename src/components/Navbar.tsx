@@ -1,13 +1,14 @@
-import Link from "next/link";
-import MaxWidthWrapper from "./MaxWidthWrapper";
-import { Icons } from "./Icons";
-import NavItems from "./NavItems";
-import { buttonVariants } from "./ui/button";
-import Cart from "./Cart";
 import { getServerSideUser } from "@/lib/payload-utils";
 import { cookies } from "next/headers";
-import UserAccountNav from "./UserAccountNav";
+import Link from "next/link";
+import Cart from "./Cart";
+import { Icons } from "./Icons";
+import MaxWidthWrapper from "./MaxWidthWrapper";
 import MobileNav from "./MobileNav";
+import NavItems from "./NavItems";
+import SearchDebounce from "./SearchDebounce";
+import { buttonVariants } from "./ui/button";
+import UserAccountNav from "./UserAccountNav";
 
 const Navbar = async () => {
   const nextCookies = cookies();
@@ -32,6 +33,7 @@ const Navbar = async () => {
               </div>
 
               <div className="ml-auto flex items-center">
+                <SearchDebounce />
                 <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                   {user ? (
                     <UserAccountNav user={user} />

@@ -1,39 +1,33 @@
+import { User } from "@/payload-types";
 import { Access, CollectionConfig } from "payload/types";
 
-const yourOwn: Access = ({ req: { user } }) => {
-  const hidden = user?.role === "admin";
-
-  if (hidden) return true;
-  if (!hidden) return false;
-
-  return {
-    user: {
-      equals: user?.id,
-    },
+const isAdmin =
+  (): Access =>
+  ({ req: { user: _user } }) => {
+    const user = _user as User | undefined;
+    return Boolean(user?.role === "admin");
   };
-};
 
 export const Orders: CollectionConfig = {
   slug: "orders",
   admin: {
     useAsTitle: "Đơn hàng của bạn",
-    description:
-      "Tóm tắt tất cả các đơn đặt hàng của bạn trên Tuấn Minh iStore.",
+    description: "Các đơn hàng của bạn trên Tuấn Minh iStore.",
   },
   access: {
-    read: yourOwn,
-    update: ({ req }) => req.user.role === "admin",
-    delete: ({ req }) => req.user.role === "admin",
-    create: ({ req }) => req.user.role === "admin",
+    read: () => true,
+    update: isAdmin(),
+    delete: isAdmin(),
+    create: isAdmin(),
   },
   fields: [
     {
       name: "_isPaid",
       type: "checkbox",
       access: {
-        read: ({ req }) => req.user.role === "admin",
+        read: () => true,
         create: () => false,
-        update: () => false,
+        update: () => true,
       },
       admin: {
         hidden: true,
