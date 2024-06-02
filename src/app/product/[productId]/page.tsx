@@ -35,7 +35,7 @@ const Page = async ({ params }: PageProps) => {
     collection: "config_product",
     where: {
       productName: {
-        equals: product?.id,
+        equals: product?.name,
       },
     },
   });

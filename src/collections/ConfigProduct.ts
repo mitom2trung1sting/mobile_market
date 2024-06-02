@@ -1,6 +1,6 @@
-import { User } from "@/payload-types";
+import { CustomSelectField } from "../components/CustomSelectFiield/field";
+import { User } from "../payload-types";
 import { Access, CollectionConfig } from "payload/types";
-import PRODUCT_LIST from "../config/data.json";
 
 const isAdmin =
   (): Access =>
@@ -22,6 +22,7 @@ export const ConfigProduct: CollectionConfig = {
     delete: isAdmin(),
     create: isAdmin(),
   },
+
   fields: [
     {
       name: "products",
@@ -33,16 +34,7 @@ export const ConfigProduct: CollectionConfig = {
       relationTo: "products",
       hasMany: false,
     },
-    {
-      name: "productName",
-      label: "Tên sản phẩm muốn cấu hình",
-      required: true,
-      type: "select",
-      options: PRODUCT_LIST.map((option) => ({
-        label: option.name,
-        value: option.value,
-      })),
-    },
+    CustomSelectField,
     {
       name: "config",
       label: "Cấu hình sản phẩm (vd: 128 GB, 256 GB, 512 GB,...)",

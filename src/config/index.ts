@@ -1,5 +1,3 @@
-import { Option } from "payload/types";
-
 export const PRODUCT_CATEGORIES = [
   {
     label: "Điện thoại",

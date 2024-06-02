@@ -54,7 +54,7 @@ const ThankYouPage = async ({ searchParams }: PageProps) => {
         <Image
           fill
           src="/checkout-thank-you.jpg"
-          className="h-full w-full object-cover object-center"
+          className="h-1/2 w-full object-cover object-center"
           alt="Cảm ơn bạn đã đặt hàng"
         />
       </div>
@@ -149,7 +149,7 @@ const ThankYouPage = async ({ searchParams }: PageProps) => {
                 <div className="flex justify-between">
                   <p>Tổng cộng</p>
                   <p className="text-gray-900">
-                    {orderTotal.toLocaleString("en")}
+                    {orderTotal.toLocaleString("vn")}
                   </p>
                 </div>
 
@@ -161,7 +161,7 @@ const ThankYouPage = async ({ searchParams }: PageProps) => {
                 <div className="flex items-center justify-between border-t border-gray-200 pt-6 text-gray-900">
                   <p className="text-base">Thành tiền</p>
                   <p className="text-base">
-                    {orderTotal.toLocaleString("en") + "đ"}
+                    {orderTotal.toLocaleString("vn") + "đ"}
                   </p>
                 </div>
               </div>

@@ -4,6 +4,7 @@ export type Session = {
   metadata: {
     userId: string;
     orderId: string;
+    productIds: string[];
   };
 };
 

@@ -1,7 +1,10 @@
-import { BeforeChangeHook } from "payload/dist/collections/config/types";
 import { Access, CollectionConfig } from "payload/types";
 import { PRODUCT_CATEGORIES, PRODUCT_TYPES } from "../../config";
 import { Product, User } from "../../payload-types";
+import {
+  AfterChangeHook,
+  BeforeChangeHook,
+} from "payload/dist/collections/config/types";
 
 const addUser: BeforeChangeHook<Product> = async ({ req, data }) => {
   const user = req.user;
@@ -9,17 +12,36 @@ const addUser: BeforeChangeHook<Product> = async ({ req, data }) => {
   return { ...data, user: user.id };
 };
 
-// const syncUser: AfterChangeHook<Product> = async ({ req, doc }) => {
+const syncUser: AfterChangeHook<Product> = async ({ req, doc }) => {
+  const fullUser = await req.payload.findByID({
+    collection: "users",
+    id: req.user.id,
+  });
 
-//     await req.payload.update({
-//       collection: "configProduct",
-//       id: fullUser.id,
-//       data: {
-//         products: dataToUpdate,
-//       },
-//     });
-//   }
-// };
+  if (fullUser && typeof fullUser === "object") {
+    const { products } = fullUser;
+
+    const allIDs = [
+      ...(products?.map((product) =>
+        typeof product === "object" ? product.id : product
+      ) || []),
+    ];
+
+    const createdProductIDs = allIDs.filter(
+      (id, index) => allIDs.indexOf(id) === index
+    );
+
+    const dataToUpdate = [...createdProductIDs, doc.id];
+
+    await req.payload.update({
+      collection: "users",
+      id: fullUser.id,
+      data: {
+        products: dataToUpdate,
+      },
+    });
+  }
+};
 
 const isAdmin =
   (): Access =>
@@ -50,51 +72,7 @@ export const Products: CollectionConfig = {
     update: isAdmin(),
     delete: isAdmin(),
   },
-  hooks: {
-    beforeChange: [addUser],
-  },
-  // hooks: {
-  //   afterChange: [syncUser],
-  //   beforeChange: [
-  //     addUser,
-  //     async (args) => {
-  //       if (args.operation === "create") {
-  //         const data = args.data as Product;
-
-  //         const createdProduct = await stripe.products.create({
-  //           name: data.name,
-  //           default_price_data: {
-  //             currency: "VND",
-  //             unit_amount: Math.round(data.price * 100),
-  //           },
-  //         });
-
-  //         const updated: Product = {
-  //           ...data,
-  //           stripeId: createdProduct.id,
-  //           priceId: createdProduct.default_price as string,
-  //         };
-
-  //         return updated;
-  //       } else if (args.operation === "update") {
-  //         const data = args.data as Product;
-
-  //         const updatedProduct = await stripe.products.update(data.stripeId!, {
-  //           name: data.name,
-  //           default_price: data.priceId!,
-  //         });
-
-  //         const updated: Product = {
-  //           ...data,
-  //           stripeId: updatedProduct.id,
-  //           priceId: updatedProduct.default_price as string,
-  //         };
-
-  //         return updated;
-  //       }
-  //     },
-  //   ],
-  // },
+  hooks: { beforeChange: [addUser], afterChange: [syncUser] },
   fields: [
     {
       name: "config_product",

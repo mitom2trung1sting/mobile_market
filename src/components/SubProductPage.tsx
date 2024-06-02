@@ -80,8 +80,10 @@ const SubProductPage = ({
           {/* Config product */}
           {!!configProducts && (
             <div>
-              <p className="mt-4 text-sm text-muted-foreground">Cấu hình:</p>
-              <div className="mt-4 w-1/2 grid grid-cols-12 gap-x-4 gap-y-10 sm:gap-x-12 md:grid-cols-3 md:gap-y-6 lg:gap-x-44">
+              {configProducts.length > 0 && (
+                <p className="mt-4 text-sm text-muted-foreground">Cấu hình:</p>
+              )}
+              <div className="mt-4 w-1/2 grid grid-cols-12 gap-x-4 gap-y-16 sm:gap-x-44 md:grid-cols-3 md:gap-y-6 lg:gap-x-44">
                 {configProducts.map((configProduct, i) => {
                   const name = !!configProduct.color
                     ? product.name +
@@ -110,13 +112,16 @@ const SubProductPage = ({
             </div>
           )}
 
-          <div className="mt-6 flex items-center">
+          <div className="mt-6 flex items-center ">
             <Check
               aria-hidden="true"
               className="h-5 w-5 flex-shrink-0 text-green-500"
             />
             <p className="ml-2 text-sm text-muted-foreground">
               Đủ điều kiện để giao hàng ngay lập tức
+            </p>
+            <p className="text-sm text-muted-foreground ml-16">
+              Sản phẩm có sẵn: {product?.totalAvailable}
             </p>
           </div>
         </section>

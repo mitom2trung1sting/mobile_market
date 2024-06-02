@@ -1,17 +1,22 @@
-import { Session } from "../type/type";
 import express from "express";
 import moment from "moment";
+import { Session } from "../type/type";
 
-import { ReceiptEmailHtml } from "../components/emails/ReceiptEmail";
-import { getPayloadClient } from "../get-payload";
-import { Product } from "../payload-types";
 import { Resend } from "resend";
+import { ReceiptEmailHtml } from "../components/emails/ReceiptEmail";
+import { Product, User } from "../payload-types";
 
 export const CreatePaymentUrl = async (
   req: express.Request,
   res: express.Response,
-  session: Session
+  session: Session,
+  products: Product[]
 ) => {
+  const productAmount = products.reduce(
+    (total, { price, discount }) => total + (price - price * (discount / 100)),
+    0
+  );
+
   process.env.TZ = "Asia/Ho_Chi_Minh";
 
   let date = new Date();
@@ -29,7 +34,7 @@ export const CreatePaymentUrl = async (
 
   var vnpUrl = vnp_Url;
   var orderId = session.metadata.orderId;
-  var amount = req.body.amount ?? 10000;
+  var amount = productAmount ?? 10000;
   var bankCode = req.body.bankCode;
 
   var orderInfo = req.body.orderDescription;
@@ -88,52 +93,13 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export const ResendEmailWebHook = async (
   req: express.Request,
   res: express.Response,
-  session: Session
+  session: Session,
+  user: User,
+  products: Product[]
 ) => {
-  const payload = await getPayloadClient();
-
-  const { docs: users } = await payload.find({
-    collection: "users",
-    where: {
-      id: {
-        equals: session.metadata.userId,
-      },
-    },
-  });
-
-  const [user] = users;
-
-  if (!user) return res.status(404).json({ error: "No such user exists." });
-
-  const { docs: orders } = await payload.find({
-    collection: "orders",
-    depth: 2,
-    where: {
-      id: {
-        equals: session.metadata.orderId,
-      },
-    },
-  });
-
-  const [order] = orders;
-
-  if (!order) return res.status(404).json({ error: "No such order exists." });
-
-  await payload.update({
-    collection: "orders",
-    data: {
-      _isPaid: true,
-    },
-    where: {
-      id: {
-        equals: session.metadata.orderId,
-      },
-    },
-  });
-
   // send receipt
   try {
-    const data = await resend.emails.send({
+    await resend.emails.send({
       from: "Tuấn Minh iStore <onboarding@resend.dev>",
       to: [user.email],
       subject:
@@ -142,13 +108,12 @@ export const ResendEmailWebHook = async (
         date: new Date(),
         email: user.email,
         orderId: session.metadata.orderId,
-        products: order.products as Product[],
+        products: products as Product[],
       }),
     });
-    res.status(200).json({ data });
   } catch (error) {
-    res.status(500).json({ error });
+    console.log("====================================");
+    console.log("loi o day line 110 ", error);
+    console.log("====================================");
   }
-
-  return res.status(200).send();
 };

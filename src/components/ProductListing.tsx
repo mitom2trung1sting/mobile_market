@@ -42,7 +42,7 @@ const ProductListing = ({ product, index }: ProductListingProps) => {
   if (isVisible && product) {
     return (
       <Card
-        className="p-3 min-h-[400px] min-w-[300px] rounded-lg transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300 cursor-pointer"
+        className="p-3 min-h-[400px] min-w-[280px] rounded-lg transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300 cursor-pointer"
         elevation={24}
       >
         <Link
@@ -59,15 +59,15 @@ const ProductListing = ({ product, index }: ProductListingProps) => {
               </h3>
             </div>
             <ImageSlider urls={validUrls} />
-            <div className="flex space-x-2">
-              <p className="text-xl font-medium text-red-400">
+            <div className="flex space-x-2 ">
+              <p className="text-lg font-medium text-red-400">
                 {(
                   product.price -
                   product.price * (product.discount / 100)
                 ).toLocaleString("vn")}
                 đ
               </p>
-              <p className="text-xl line-through text-gray-300">
+              <p className="text-lg line-through text-gray-300">
                 {product.price}đ
               </p>
             </div>

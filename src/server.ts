@@ -10,10 +10,6 @@ import { parse } from "url";
 import { getPayloadClient } from "./get-payload";
 import { nextApp, nextHandler } from "./next-utils";
 import { appRouter } from "./trpc";
-import fs from "fs";
-import { Payload } from "payload";
-import { Product } from "./payload-types";
-import PRODUCT_LIST from "./config/data.json";
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
@@ -30,28 +26,6 @@ export type ExpressContext = inferAsyncReturnType<typeof createContext>;
 
 export type WebhookRequest = IncomingMessage & {
   rawBody: Buffer;
-};
-
-const writeJsonFile = async (payload: Payload) => {
-  const { docs: products } = await payload.find({
-    collection: "products",
-  });
-
-  const options =
-    products.length > 0
-      ? products.map((product: Product) => {
-          return { name: product.name, value: product.id };
-        })
-      : [];
-
-  let existingData = PRODUCT_LIST;
-
-  existingData = options;
-
-  const filePath = path.join(__dirname, "config/data.json");
-
-  // Write the updated data back to the file
-  fs.writeFileSync(filePath, JSON.stringify(existingData, null, 2), "utf8");
 };
 
 const start = async () => {
@@ -71,8 +45,6 @@ const start = async () => {
       },
     },
   });
-
-  writeJsonFile(payload);
 
   if (process.env.NEXT_BUILD) {
     app.listen(PORT, async () => {
@@ -100,6 +72,20 @@ const start = async () => {
     const { query } = parsedUrl;
 
     return nextApp.render(req, res, "/cart", query);
+  });
+
+  app.get("/getListProducts", async (req, res) => {
+    try {
+      const { docs: products } = await payload.find({
+        collection: "products",
+      });
+
+      return res.json(products);
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ error: "Lỗi rồi không tìm thấy sản phẩm nhé!!" });
+    }
   });
 
   app.use("/cart", cartRouter);

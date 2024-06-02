@@ -10,7 +10,6 @@ export const paymentRouter = router({
     .mutation(async ({ ctx, input }) => {
       const { user } = ctx;
       let { productIds } = input;
-
       if (productIds.length === 0) {
         throw new TRPCError({ code: "BAD_REQUEST" });
       }
@@ -26,13 +25,11 @@ export const paymentRouter = router({
         },
       });
 
-      const filteredProducts = products.filter((prod) => Boolean(prod.priceId));
-
       const order = await payload.create({
         collection: "orders",
         data: {
           _isPaid: false,
-          products: filteredProducts.map((prod) => prod.id),
+          products: products.map((product) => product.id),
           user: user.id,
         },
       });
@@ -43,16 +40,67 @@ export const paymentRouter = router({
         metadata: {
           userId: user.id,
           orderId: order.id,
+          productIds,
         },
       };
 
-      ctx.req.cookies = {
-        session,
-      };
-
       try {
-        const url = await CreatePaymentUrl(ctx.req, ctx.res, session);
-        ResendEmailWebHook(ctx.req, ctx.res, session);
+        const { docs: users } = await payload.find({
+          collection: "users",
+          where: {
+            id: {
+              equals: session.metadata.userId,
+            },
+          },
+        });
+
+        if (!users.length) {
+          throw new TRPCError({ code: "NOT_FOUND" });
+        }
+
+        const [user] = users;
+
+        const { docs: products } = await payload.find({
+          collection: "products",
+          where: {
+            id: {
+              in: session.metadata.productIds,
+            },
+          },
+        });
+
+        const url = await CreatePaymentUrl(ctx.req, ctx.res, session, products);
+
+        if (!!url) {
+          for (const product of products) {
+            const totalAvailable = product.totalAvailable - 1;
+            await payload.update({
+              collection: "products",
+              data: {
+                totalAvailable,
+              },
+              where: {
+                id: {
+                  equals: product.id,
+                },
+              },
+            });
+          }
+
+          await payload.update({
+            collection: "orders",
+            data: {
+              _isPaid: true,
+            },
+            where: {
+              id: {
+                equals: session.metadata.orderId,
+              },
+            },
+          });
+          ResendEmailWebHook(ctx.req, ctx.res, session, user, products);
+        }
+
         return { url };
       } catch (err) {
         return { url: session.cancel_url };
