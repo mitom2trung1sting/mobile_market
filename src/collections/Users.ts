@@ -1,6 +1,6 @@
 import { User } from "@/payload-types";
-import { PrimaryActionEmailHtml } from "../components/emails/PrimaryActionEmail";
 import { Access, CollectionConfig } from "payload/types";
+import { PrimaryActionEmailHtml } from "../components/emails/PrimaryActionEmail";
 
 const isAdmin =
   (): Access =>
@@ -26,10 +26,11 @@ export const Users: CollectionConfig = {
     },
   },
   access: {
-    read: isAdmin(),
+    read: () => true,
     create: () => true,
     update: isAdmin(),
     delete: isAdmin(),
+    admin: ({ req: { user } }) => user.role === "admin",
   },
   admin: {
     hidden: !isAdmin(),

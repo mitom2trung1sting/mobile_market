@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { getPayloadClient } from "../get-payload";
 import { privateProcedure, router } from "./trpc";
-import { CreatePaymentUrl, ResendEmailWebHook } from "./webhooks";
+import { CreatePaymentUrl } from "./webhooks";
 
 export const paymentRouter = router({
   createSession: privateProcedure
@@ -45,61 +45,14 @@ export const paymentRouter = router({
       };
 
       try {
-        const { docs: users } = await payload.find({
-          collection: "users",
-          where: {
-            id: {
-              equals: session.metadata.userId,
-            },
-          },
-        });
-
-        if (!users.length) {
-          throw new TRPCError({ code: "NOT_FOUND" });
-        }
-
-        const [user] = users;
-
-        const { docs: products } = await payload.find({
-          collection: "products",
-          where: {
-            id: {
-              in: session.metadata.productIds,
-            },
-          },
-        });
-
-        const url = await CreatePaymentUrl(ctx.req, ctx.res, session, products);
-
-        if (!!url) {
-          for (const product of products) {
-            const totalAvailable = product.totalAvailable - 1;
-            await payload.update({
-              collection: "products",
-              data: {
-                totalAvailable,
-              },
-              where: {
-                id: {
-                  equals: product.id,
-                },
-              },
-            });
-          }
-
-          await payload.update({
-            collection: "orders",
-            data: {
-              _isPaid: true,
-            },
-            where: {
-              id: {
-                equals: session.metadata.orderId,
-              },
-            },
-          });
-          ResendEmailWebHook(ctx.req, ctx.res, session, user, products);
-        }
+        const url = await CreatePaymentUrl(
+          ctx.req,
+          ctx.res,
+          session,
+          productIds,
+          products,
+          user
+        );
 
         return { url };
       } catch (err) {

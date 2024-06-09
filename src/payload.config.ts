@@ -30,14 +30,14 @@ export default buildConfig({
       favicon: "/favicon.ico",
       ogImage: "/thumbnail.jpg",
     },
+    components: {},
   },
   rateLimit: {
     max: 2000,
   },
   editor: slateEditor({}),
   db: mongooseAdapter({
-    // url: process.env.MONGODB_URL!,
-    url: "mongodb+srv://root:140301@cluster0.iajiv9m.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
+    url: process.env.MONGODB_URL!.replace(/\s+/g, ""),
   }),
   typescript: {
     outputFile: path.resolve(__dirname, "payload-types.ts"),

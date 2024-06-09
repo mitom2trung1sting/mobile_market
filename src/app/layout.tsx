@@ -5,6 +5,7 @@ import { cn, constructMetadata } from "@/lib/utils";
 import { Inter } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
+import ChatBox from "@/components/ChatBox";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,6 +25,8 @@ export default function RootLayout({
           <Providers>
             <Navbar />
             <div className="flex-grow flex-1">{children}</div>
+            <ChatBox />
+
             <Footer />
           </Providers>
         </main>

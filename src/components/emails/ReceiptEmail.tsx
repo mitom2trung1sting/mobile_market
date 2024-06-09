@@ -1,3 +1,4 @@
+import { CountElement } from "@/trpc/webhooks";
 import { Product } from "../../payload-types";
 
 import {
@@ -23,6 +24,8 @@ interface ReceiptEmailProps {
   date: Date;
   orderId: string;
   products: Product[];
+  productAmount: number;
+  listProduct: CountElement[];
 }
 
 export const ReceiptEmail = ({
@@ -30,13 +33,9 @@ export const ReceiptEmail = ({
   date,
   orderId,
   products,
+  productAmount,
+  listProduct,
 }: ReceiptEmailProps) => {
-  const total =
-    products.reduce(
-      (acc, curr) => acc + (curr.price - curr.price * curr.discount),
-      0
-    ) + 1;
-
   return (
     <Html>
       <Head />
@@ -96,6 +95,10 @@ export const ReceiptEmail = ({
           {products.map((product) => {
             const { image } = product.images[0];
 
+            const currentProduct = listProduct.find(
+              (item) => item.id === product.id
+            );
+
             return (
               <Section key={product.id}>
                 <Column style={{ width: "64px" }}>
@@ -128,7 +131,11 @@ export const ReceiptEmail = ({
 
                 <Column style={productPriceWrapper} align="right">
                   <Text style={productPrice}>
-                    {product.price.toLocaleString("en")}
+                    {(
+                      product.price -
+                      (product.discount * product.price) / 100
+                    ).toLocaleString("en")}
+                    &nbsp; X{currentProduct?.quantity}
                   </Text>
                 </Column>
               </Section>
@@ -159,7 +166,7 @@ export const ReceiptEmail = ({
             <Column style={productPriceVerticalLine}></Column>
             <Column style={productPriceLargeWrapper}>
               <Text style={productPriceLarge}>
-                {total.toLocaleString("en")}
+                {productAmount.toLocaleString("vn") + "đ"}
               </Text>
             </Column>
           </Section>

@@ -5,17 +5,45 @@ import { Session } from "../type/type";
 import { Resend } from "resend";
 import { ReceiptEmailHtml } from "../components/emails/ReceiptEmail";
 import { Product, User } from "../payload-types";
+import { getPayloadClient } from "../get-payload";
 
 export const CreatePaymentUrl = async (
   req: express.Request,
   res: express.Response,
   session: Session,
-  products: Product[]
+  productIds: string[],
+  products: Product[],
+  user: User
 ) => {
-  const productAmount = products.reduce(
-    (total, { price, discount }) => total + (price - price * (discount / 100)),
-    0
-  );
+  const payload = await getPayloadClient();
+
+  const listProduct = CountElements(productIds);
+
+  let productAmount = 0;
+
+  for (let tmp of listProduct) {
+    const currentProduct = products.find((obj) => tmp.id === obj.id);
+
+    if (currentProduct) {
+      const { price, totalAvailable, discount } = currentProduct;
+      const currentPrice = price - (price * discount) / 100;
+      productAmount += currentPrice * tmp.quantity;
+
+      await payload.update({
+        collection: "products",
+        data: {
+          totalAvailable: totalAvailable - tmp.quantity,
+        },
+        where: {
+          id: {
+            equals: tmp.id,
+          },
+        },
+      });
+    } else {
+      return payload.logger.error("Product not found");
+    }
+  }
 
   process.env.TZ = "Asia/Ho_Chi_Minh";
 
@@ -34,7 +62,7 @@ export const CreatePaymentUrl = async (
 
   var vnpUrl = vnp_Url;
   var orderId = session.metadata.orderId;
-  var amount = productAmount ?? 10000;
+  var amount = productAmount;
   var bankCode = req.body.bankCode;
 
   var orderInfo = req.body.orderDescription;
@@ -68,7 +96,23 @@ export const CreatePaymentUrl = async (
   vnp_Params["vnp_SecureHash"] = signed;
   vnpUrl += "?" + querystring.stringify(vnp_Params, { encode: false });
 
-  // res.redirect(vnpUrl);
+  if (!!vnpUrl) {
+    await payload.update({
+      collection: "orders",
+      data: {
+        _isPaid: true,
+        user: session.metadata.userId,
+      },
+      where: {
+        id: {
+          equals: session.metadata.orderId,
+        },
+      },
+    });
+
+    ResendEmailWebHook(session, user, products, productAmount, listProduct);
+  }
+
   return vnpUrl;
 };
 
@@ -91,11 +135,11 @@ function sortObject(obj: any) {
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const ResendEmailWebHook = async (
-  req: express.Request,
-  res: express.Response,
   session: Session,
   user: User,
-  products: Product[]
+  products: Product[],
+  productAmount: number,
+  listProduct: CountElement[]
 ) => {
   // send receipt
   try {
@@ -109,6 +153,8 @@ export const ResendEmailWebHook = async (
         email: user.email,
         orderId: session.metadata.orderId,
         products: products as Product[],
+        productAmount,
+        listProduct,
       }),
     });
   } catch (error) {
@@ -117,3 +163,24 @@ export const ResendEmailWebHook = async (
     console.log("====================================");
   }
 };
+
+export type CountElement = {
+  id: string;
+  quantity: number;
+};
+
+export function CountElements(arr: string[]): CountElement[] {
+  const counts: Record<string, number> = {};
+  for (let i = 0; i < arr.length; i++) {
+    if (counts[arr[i]]) {
+      counts[arr[i]]++;
+    } else {
+      counts[arr[i]] = 1;
+    }
+  }
+
+  return Object.entries(counts).map(([id, quantity]) => ({
+    id: id,
+    quantity: Number(quantity),
+  }));
+}

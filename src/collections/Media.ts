@@ -26,7 +26,7 @@ export const Media: CollectionConfig = {
     update: isAdmin(),
   },
   admin: {
-    hidden: ({ user }) => user.role !== "admin",
+    hidden: !isAdmin(),
   },
   upload: {
     staticURL: "/media",

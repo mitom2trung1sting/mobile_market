@@ -11,6 +11,7 @@ const isAdmin =
 export const Orders: CollectionConfig = {
   slug: "orders",
   admin: {
+    hidden: !isAdmin(),
     useAsTitle: "Đơn hàng của bạn",
     description: "Các đơn hàng của bạn trên Tuấn Minh iStore.",
   },
@@ -20,6 +21,7 @@ export const Orders: CollectionConfig = {
     delete: isAdmin(),
     create: isAdmin(),
   },
+
   fields: [
     {
       name: "_isPaid",

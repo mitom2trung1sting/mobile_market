@@ -45,7 +45,7 @@ const ThankYouPage = async ({ searchParams }: PageProps) => {
   const products = order.products as Product[];
 
   const orderTotal = products.reduce((total, product) => {
-    return total + product.price;
+    return total + (product.price - product.price * (product.discount / 100));
   }, 0);
 
   return (

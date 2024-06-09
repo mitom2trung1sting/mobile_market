@@ -1,47 +1,6 @@
 import { Access, CollectionConfig } from "payload/types";
 import { PRODUCT_CATEGORIES, PRODUCT_TYPES } from "../../config";
-import { Product, User } from "../../payload-types";
-import {
-  AfterChangeHook,
-  BeforeChangeHook,
-} from "payload/dist/collections/config/types";
-
-const addUser: BeforeChangeHook<Product> = async ({ req, data }) => {
-  const user = req.user;
-
-  return { ...data, user: user.id };
-};
-
-const syncUser: AfterChangeHook<Product> = async ({ req, doc }) => {
-  const fullUser = await req.payload.findByID({
-    collection: "users",
-    id: req.user.id,
-  });
-
-  if (fullUser && typeof fullUser === "object") {
-    const { products } = fullUser;
-
-    const allIDs = [
-      ...(products?.map((product) =>
-        typeof product === "object" ? product.id : product
-      ) || []),
-    ];
-
-    const createdProductIDs = allIDs.filter(
-      (id, index) => allIDs.indexOf(id) === index
-    );
-
-    const dataToUpdate = [...createdProductIDs, doc.id];
-
-    await req.payload.update({
-      collection: "users",
-      id: fullUser.id,
-      data: {
-        products: dataToUpdate,
-      },
-    });
-  }
-};
+import { User } from "../../payload-types";
 
 const isAdmin =
   (): Access =>
@@ -52,6 +11,16 @@ const isAdmin =
     }
     return false;
   };
+
+const adminsAndUser: Access = ({ req: { user } }) => {
+  if (user.role === "admin") return true;
+
+  return {
+    id: {
+      equals: user.id,
+    },
+  };
+};
 
 export const Products: CollectionConfig = {
   slug: "products",
@@ -68,11 +37,11 @@ export const Products: CollectionConfig = {
     ],
   },
   access: {
-    read: isAdmin(),
+    read: () => true,
     update: isAdmin(),
     delete: isAdmin(),
   },
-  hooks: { beforeChange: [addUser], afterChange: [syncUser] },
+  // hooks: {  },
   fields: [
     {
       name: "config_product",
@@ -128,6 +97,11 @@ export const Products: CollectionConfig = {
       max: 999999999999999,
       type: "number",
       required: true,
+      access: {
+        read: () => true,
+        create: () => true,
+        update: () => true,
+      },
     },
     {
       name: "type",

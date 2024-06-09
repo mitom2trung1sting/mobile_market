@@ -12,14 +12,16 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const Page = () => {
-  const { items, removeItem } = useCart();
+  const { items, removeItem, clearCart } = useCart();
 
   const router = useRouter();
 
   const { mutate: createCheckoutSession, isLoading } =
     trpc.payment.createSession.useMutation({
       onSuccess: ({ url }) => {
-        if (url) router.replace(url);
+        if (url) {
+          router.replace(url);
+        }
       },
     });
 

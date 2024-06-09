@@ -12,6 +12,7 @@ const isAdmin =
 export const ConfigProduct: CollectionConfig = {
   slug: "config_product",
   admin: {
+    hidden: !isAdmin(),
     useAsTitle: "Cấu hình sản phẩm",
     description:
       "Thêm cấu hình, thuộc tính cho sản phẩm của bạn trên Tuấn Minh iStore.",
